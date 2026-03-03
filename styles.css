@@ -1,0 +1,396 @@
+:root {
+    color-scheme: light;
+    --tg-bg: #f5f5f5;
+    --tg-text: #111111;
+    --tg-muted: #111111;
+    --card-bg: #ffffff;
+    --card-border: rgba(148, 163, 184, 0.32);
+    --board-border: #94a3b8;
+    --cell-bg: #e2e8f0;
+    --cell-border: rgba(148, 163, 184, 0.5);
+    --accent: #f59e0b;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+    height: auto;
+    min-height: 0;
+    margin: 0;
+}
+
+body {
+    background: var(--tg-bg);
+    color: var(--tg-text);
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    overflow: hidden;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.mini-shell {
+    min-height: 0;
+    padding: 8px 12px 12px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.app-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 14px;
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    background: var(--card-bg);
+    color: #111111;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 18px 40px rgba(148, 163, 184, 0.28);
+}
+
+.app-header,
+.stats-panel,
+.app-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.app-header {
+    margin-bottom: 14px;
+}
+
+.stats-panel {
+    margin-bottom: 14px;
+}
+
+.score-box,
+.next-box {
+    flex: 1;
+    min-height: 72px;
+    padding: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 18px;
+    background: rgba(248, 250, 252, 0.98);
+}
+
+.score-label,
+.next-label {
+    display: block;
+    font-size: 12px;
+    color: #111111;
+}
+
+.score-box strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 28px;
+}
+
+.next-balls {
+    margin-top: 10px;
+    display: flex;
+    gap: 6px;
+    min-height: 26px;
+    align-items: center;
+}
+
+.board-shell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.field {
+    display: inline-block;
+    position: relative;
+    box-sizing: content-box;
+    padding: 2px;
+    border: 3px solid var(--board-border);
+    border-radius: 14px;
+    background: var(--board-border);
+    overflow: hidden;
+    box-shadow: 0 10px 18px rgba(148, 163, 184, 0.22);
+}
+
+.field.onselect .cell {
+    cursor: pointer;
+}
+
+.field.over {
+    border-color: #ef4444;
+    pointer-events: none;
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--cell-border);
+    background: var(--cell-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    appearance: none;
+    cursor: pointer;
+}
+
+.ball {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.cell .selected.ball {
+    animation: pulse 1.1s infinite;
+}
+
+.next {
+    width: 12px;
+    height: 12px;
+    border-radius: 12px;
+    opacity: 0.55;
+}
+
+.status-text {
+    margin: 12px 0 0;
+    color: #fca5a5;
+    font-size: 14px;
+}
+
+.app-footer {
+    margin-top: 14px;
+    justify-content: center;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: #111111;
+}
+
+.controls * {
+    color: #111111;
+}
+
+.ui-button {
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-weight: 700;
+    color: #111111;
+    cursor: pointer;
+    transition:
+        transform 0.12s ease,
+        opacity 0.12s ease;
+}
+
+.ui-button:active {
+    transform: scale(0.98);
+}
+
+.ui-button-secondary {
+    background: rgba(255, 255, 255, 0.92);
+    color: #111111;
+    border: 1px solid rgba(148, 163, 184, 0.32);
+}
+
+.ui-button-primary {
+    background: #f59e0b;
+    color: #111111;
+}
+
+.drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.18);
+    backdrop-filter: blur(4px);
+}
+
+.drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(92vw, 360px);
+    height: 100dvh;
+    padding: 18px;
+    background: #ffffff;
+    color: #111111;
+    border-left: 1px solid rgba(148, 163, 184, 0.24);
+    box-shadow: -12px 0 30px rgba(148, 163, 184, 0.24);
+    transform: translateX(100%);
+    transition: transform 0.2s ease;
+    z-index: 20;
+}
+
+.drawer-open {
+    transform: translateX(0);
+}
+
+.drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.drawer-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #111111;
+}
+
+.drawer-close {
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    background: transparent;
+    color: #111111;
+    border-radius: 999px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.control label {
+    display: block;
+    margin-bottom: 8px;
+    color: #111111;
+}
+
+.range-row {
+    display: grid;
+    grid-template-columns: 1fr 72px;
+    gap: 10px;
+    align-items: center;
+}
+
+.range-row input[type="range"] {
+    width: 100%;
+    accent-color: #111111;
+}
+
+.range-row input[type="number"] {
+    width: 100%;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    border-radius: 10px;
+    background: #ffffff;
+    color: #111111;
+    -webkit-text-fill-color: #111111;
+    padding: 8px 10px;
+}
+
+.drawer-divider {
+    width: 100%;
+    height: 1px;
+    border: 0;
+    margin: 0;
+    background: rgba(148, 163, 184, 0.16);
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #111111;
+}
+
+.checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+.drawer-note {
+    margin: 0;
+    color: #111111;
+    font-size: 12px;
+}
+
+.c1 {
+    background: radial-gradient(circle, #f9d4d4 0%, #b91c1c 62%);
+}
+
+.c2 {
+    background: radial-gradient(circle, #dbeafe 0%, #1d4ed8 62%);
+}
+
+.c3 {
+    background: radial-gradient(circle, #dcfce7 0%, #15803d 62%);
+}
+
+.c4 {
+    background: radial-gradient(circle, #e5e7eb 0%, #111827 62%);
+}
+
+.c5 {
+    background: radial-gradient(circle, #fef3c7 0%, #d97706 62%);
+}
+
+.c6 {
+    background: radial-gradient(circle, #fef9c3 0%, #ca8a04 62%);
+}
+
+.c7 {
+    background: radial-gradient(circle, #f3e8ff 0%, #7c3aed 62%);
+}
+
+.c8 {
+    background: radial-gradient(circle, #fde68a 0%, #ea580c 62%);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 420px) {
+    .mini-shell {
+        padding: 8px;
+    }
+
+    .app-card {
+        padding: 12px;
+        border-radius: 20px;
+    }
+
+    .drawer {
+        width: 100%;
+    }
+
+    .cell {
+        width: calc((100vw - 48px) / 10);
+        height: calc((100vw - 48px) / 10);
+    }
+
+    .field {
+        width: calc(100vw - 48px) !important;
+        height: calc(100vw - 48px) !important;
+    }
+
+    .ball {
+        width: calc((100vw - 48px) / 14);
+        height: calc((100vw - 48px) / 14);
+    }
+}
